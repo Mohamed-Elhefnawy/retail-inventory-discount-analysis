@@ -2,7 +2,7 @@
 
 SQL and Python analysis of a retail sales and inventory warehouse: which products to reorder, where stock is tied up, and what promotions do to margin.
 
-**Dashboard:** open `docs/index.html` (interactive charts, no setup needed). Static previews are in `screenshots/`.
+**Dashboard:** `docs/index.html` (interactive charts, opens in any browser).
 
 ## About the data
 
@@ -53,7 +53,7 @@ Definitions:
 
 ```bash
 pip install -r requirements.txt
-./run_all.sh
+bash run_all.sh
 ```
 
 Results are written to `results/*.csv` and the dashboard to `docs/index.html`.
