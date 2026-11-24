@@ -6,9 +6,9 @@ SQL and Python analysis of a retail sales and inventory warehouse: which product
 
 ## About the data
 
-Microsoft's **Contoso Retail Data Warehouse**, a fictitious retailer used for BI demos: 3.4M sales lines (2007 to 2009), 8.0M weekly inventory records, 306 stores, about 2,500 products. The fields are realistic (unit cost, discount amount, return amount, on-hand, on-order, safety stock), but the records are synthetic. The results show the method, not the performance of a real business. Amounts are in the dataset's own currency units.
+Microsoft's **Contoso Retail Data Warehouse**, a fictitious retailer used for BI demos: 3.4M sales lines (2007 to 2009), 8.0M weekly inventory records, 306 stores, about 2,500 products. It includes unit cost, discount amount, return amount, on-hand, on-order and safety-stock fields, but every record is synthetic. The results show the method, not the performance of a real business. Amounts are in the dataset's own currency units.
 
-Sources: [Microsoft Contoso BI Demo Dataset](https://www.microsoft.com/en-us/download/details.aspx?id=18279) and Microsoft's [contoso-data-warehouse sample](https://github.com/microsoft/sql-server-samples/tree/master/samples/databases/contoso-data-warehouse) (MIT-licensed sample repository). `src/00_download.sh` downloads the tables from a public mirror of the same files. Raw data is not stored in this repository.
+Sources: Microsoft's [Contoso BI Demo Dataset](https://www.microsoft.com/en-us/download/details.aspx?id=18279) (described there as a fictitious retail demo dataset) and the [contoso-data-warehouse sample](https://github.com/microsoft/sql-server-samples/tree/master/samples/databases/contoso-data-warehouse) in Microsoft's sql-server-samples repository. The data files for this project were downloaded from a third-party Hugging Face mirror ([jocapc/ContosoRetailDW](https://huggingface.co/datasets/jocapc/ContosoRetailDW)) that republishes the Contoso Retail DW extracts. Check Microsoft's terms before reusing the data. This repository contains no raw data, only aggregated results and code; `src/00_download.sh` fetches the files from the mirror.
 
 ## Questions
 
@@ -19,10 +19,10 @@ Sources: [Microsoft Contoso BI Demo Dataset](https://www.microsoft.com/en-us/dow
 
 ## Findings
 
-- **Discounts cost margin and do not always buy volume.** Full-price lines earn 57.6% gross margin. The Spring 20% promotion earns 55.5% and sells 14.6 units per line against 14.8 at full price. The Holiday 15% promotion sells 20.9 units per line at 56.0% margin. Promotions run in specific seasons and regions, so this is an association, not a proven effect.
+- **Promoted lines show lower margin, and the volume pattern is mixed.** Full-price lines earn 57.6% gross margin. Lines under the Spring 20% promotion earn 55.5% and average 14.6 units per line against 14.8 at full price. Lines under the Holiday 15% promotion average 20.9 units per line at 56.0%. These are observed differences, not measured effects: promotions run in specific seasons and regions.
 - **37% of stock value is overstock.** 28.7M of 78.5M sits in store-products with more than 26 weeks of cover. Home Appliances (9.3M) and Computers (8.2M) hold the most.
 - **Shortages are concentrated.** 12.3% of store-products are below safety stock with nothing on order. In Music, Movies and Audio Books it is 67%. Cell phone accessories carry the largest weekly demand at risk (about 4,300 units per week).
-- **Sales fell while units rose.** Net sales dropped from 4.56B (2007) to 3.74B (2009) while units sold rose from 17.0M to 19.8M. Revenue per unit fell about 30% and gross margin stayed near 57%. The data cannot separate lower prices from a shift to cheaper products.
+- **Sales fell while units sold rose.** Net sales went from 4.56B (2007) to 3.74B (2009) while units sold went from 17.0M to 19.8M over the same years (16.5M in 2008). Revenue per unit fell about 30% between 2007 and 2009 and gross margin stayed near 57%. The data cannot separate lower prices from a shift to cheaper products.
 - **Margin by category** ranges from 53.8% (Games and Toys) to 60.8% (Music, Movies and Audio Books).
 
 ## Method
