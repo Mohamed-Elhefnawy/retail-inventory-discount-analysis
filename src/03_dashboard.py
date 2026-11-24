@@ -92,7 +92,7 @@ th{{color:{MUTED};font-weight:600}} .n{{text-align:right}}
 </style></head><body><div class="wrap">
 <h1>Contoso Retail: Inventory, Discount and Margin Analysis</h1>
 <p class="sub">3.4M sales lines and 8.0M weekly inventory records across 306 stores and 2,500 products, 2007 to 2009. Analysis in SQL (DuckDB) and Python.</p>
-<div class="note"><b>About the data.</b> Contoso is Microsoft's fictitious retail sample data warehouse. The fields are real (cost, discount, returns, on-hand, on-order, safety stock), but the records are synthetic, so the figures show method, not a real business. Amounts are in the dataset's own currency units. Inventory conclusions use the latest weekly snapshot (26 Dec 2009).</div>
+<div class="note"><b>About the data.</b> Contoso is Microsoft's fictitious retail sample data warehouse. The data includes cost, discount, return, on-hand, on-order and safety-stock fields, but every record is synthetic, so the figures show the method and are not observations from a real business. Amounts are in the dataset's own currency units. Inventory conclusions use the latest weekly snapshot (26 Dec 2009).</div>
 <div class="kpis">
 <div class="k"><b>{y09.net_sales_m/1000:.2f}B</b><span>2009 net sales ({100*(y09.net_sales_m/y08.net_sales_m-1):.1f}% vs 2008)</span></div>
 <div class="k"><b>{y09.gross_margin_pct:.1f}%</b><span>2009 gross margin</span></div>
@@ -103,10 +103,10 @@ th{{color:{MUTED};font-weight:600}} .n{{text-align:right}}
 </div>
 <h2>Key findings</h2>
 <ul class="find">
-<li><b>Discounting costs margin and does not always buy volume.</b> Full-price lines earn {fp.gross_margin_pct:.1f}% gross margin. The Spring 20% promotion earns {sp20.gross_margin_pct:.1f}% and sells {sp20.units_per_line:.1f} units per line against {fp.units_per_line:.1f} at full price, so it gives up margin without a volume gain. The Holiday 15% promotion lifts units per line to {hol15.units_per_line:.1f} at {hol15.gross_margin_pct:.1f}% margin.</li>
+<li><b>Promoted lines show lower margin, and the volume pattern is mixed.</b> Full-price lines earn {fp.gross_margin_pct:.1f}% gross margin. Lines under the Spring 20% promotion earn {sp20.gross_margin_pct:.1f}% and average {sp20.units_per_line:.1f} units per line against {fp.units_per_line:.1f} at full price. Lines under the Holiday 15% promotion average {hol15.units_per_line:.1f} units per line at {hol15.gross_margin_pct:.1f}% margin. These are observed differences, not measured effects of the promotions.</li>
 <li><b>Over a third of inventory value is slow.</b> {over_val:.1f}M of {tot_val:.1f}M sits in store-products with more than 26 weeks of cover or no sales in the last 13 weeks. Home Appliances and Computers hold the largest amounts.</li>
 <li><b>Shortages are concentrated.</b> Music, Movies and Audio Books has {risk.sort_values('pct_urgent').iloc[-1].pct_urgent:.0f}% of store-products below safety stock with no order placed. Cell phone accessories are the biggest reorder exposure by weekly demand.</li>
-<li><b>Sales fell each year while margin held near 57%.</b> Net sales dropped from {kpi.net_sales_m.iloc[0]/1000:.2f}B in 2007 to {y09.net_sales_m/1000:.2f}B in 2009, yet units sold rose from {kpi.units.iloc[0]/1e6:.1f}M to {y09.units/1e6:.1f}M. Revenue per unit fell about {100*(1-(y09.net_sales_m*1e6/y09.units)/(kpi.net_sales_m.iloc[0]*1e6/kpi.units.iloc[0])):.0f}%, which points to cheaper products or lower prices rather than weaker demand. The data does not separate price from mix.</li>
+<li><b>Sales fell while units sold rose, and margin held near 57%.</b> Net sales went from {kpi.net_sales_m.iloc[0]/1000:.2f}B in 2007 to {y09.net_sales_m/1000:.2f}B in 2009, while units sold went from {kpi.units.iloc[0]/1e6:.1f}M to {y09.units/1e6:.1f}M over the same years ({kpi.units.iloc[1]/1e6:.1f}M in 2008). Revenue per unit fell about {100*(1-(y09.net_sales_m*1e6/y09.units)/(kpi.net_sales_m.iloc[0]*1e6/kpi.units.iloc[0])):.0f}% between 2007 and 2009, which is consistent with cheaper products or lower prices rather than weaker demand. The data does not separate price from product mix.</li>
 </ul>
 <h2>Sales and seasonality</h2><div class="card">{d('monthly', True)}</div>
 <h2>Discount impact on margin</h2><div class="grid"><div class="card">{d('promo_margin')}</div><div class="card">{d('promo_units')}</div></div>
