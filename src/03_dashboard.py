@@ -16,8 +16,8 @@ urg = int(risk.below_safety_no_order.sum()); n_sp = int(risk.store_products.sum(
 figs = {}
 
 f = go.Figure()
-f.add_bar(x=month.month, y=month.net_sales_m, name="Net sales (millions)", marker_color=A, yaxis="y")
-f.add_scatter(x=month.month, y=month.gross_margin_pct, name="Gross margin %", mode="lines+markers", line=dict(color=C, width=2), yaxis="y2")
+f.add_bar(x=month.month, y=month.net_sales_m, name="Net sales (millions)", marker_color=A, yaxis="y", hovertemplate="%{x|%b %Y}<br>Net sales: %{y:.1f}M<extra></extra>")
+f.add_scatter(x=month.month, y=month.gross_margin_pct, name="Gross margin %", mode="lines+markers", line=dict(color=C, width=2), yaxis="y2", hovertemplate="%{x|%b %Y}<br>Gross margin: %{y:.2f}%<extra></extra>")
 f.update_layout(title="Monthly net sales and gross margin, 2007 to 2009", yaxis=dict(title="Net sales (millions)"),
                 yaxis2=dict(title="Gross margin %", overlaying="y", side="right", range=[50, 62], showgrid=False),
                 legend=dict(orientation="h", y=-0.2))
@@ -28,6 +28,7 @@ f = go.Figure()
 f.add_bar(y=p.promo, x=p.gross_margin_pct, orientation="h", marker_color=[C if "No discount" not in s else B for s in p.promo],
           text=[f"{v:.1f}%" for v in p.gross_margin_pct], textposition="outside")
 f.update_layout(title="Gross margin by promotion (full price in green)", xaxis=dict(title="Gross margin %", range=[50, 60]))
+f.update_traces(hovertemplate="%{y}<br>Gross margin: %{x:.2f}%<extra></extra>")
 figs["promo_margin"] = style(f, 400, margin=dict(l=250, r=40, t=50, b=50))
 
 f = go.Figure()
@@ -35,27 +36,32 @@ f.add_bar(y=p.promo, x=p.units_per_line, orientation="h", marker_color=A, text=[
 base = float(promo[promo.promo == "No discount"].units_per_line.iloc[0])
 f.add_vline(x=base, line_dash="dash", line_color=MUTED, annotation_text="full price", annotation_position="top")
 f.update_layout(title="Units per sales line by promotion", xaxis=dict(title="Units per line", range=[0, 25]))
+f.update_traces(hovertemplate="%{y}<br>Units per line: %{x:.2f}<extra></extra>")
 figs["promo_units"] = style(f, 400, margin=dict(l=250, r=40, t=50, b=50))
 
 c = cat.sort_values("gross_margin_pct")
 f = go.Figure(go.Bar(y=c.category, x=c.gross_margin_pct, orientation="h", marker_color=A, text=[f"{v:.1f}%" for v in c.gross_margin_pct], textposition="outside"))
 f.update_layout(title="Gross margin by category", xaxis=dict(title="Gross margin %", range=[50, 64]))
+f.update_traces(hovertemplate="%{y}<br>Gross margin: %{x:.2f}%<extra></extra>")
 figs["cat_margin"] = style(f, 380, margin=dict(l=200, r=40, t=50, b=50))
 
 order = [b for b in ["Under 13 wks cover", "13-26 wks cover", "Over 26 wks cover", "No sales in 13 wks"] if b in set(cover.cover_band)]
 cv = cover.set_index("cover_band").reindex(order).fillna(0).reset_index()
 f = go.Figure(go.Bar(x=cv.cover_band, y=cv.stock_value_m, marker_color=[B, A, C, "#b91c1c"][:len(cv)], text=[f"{v:.1f}M" for v in cv.stock_value_m], textposition="outside"))
 f.update_layout(title="Stock value by weeks of cover (latest snapshot)", yaxis=dict(title="Stock value (millions)"))
+f.update_traces(hovertemplate="%{x}<br>Stock value: %{y:.2f}M<extra></extra>")
 figs["cover"] = style(f, 380)
 
 o = over.sort_values("overstock_value_m")
 f = go.Figure(go.Bar(y=o.category, x=o.overstock_value_m, orientation="h", marker_color=C, text=[f"{v:.1f}M ({q:.0f}%)" for v, q in zip(o.overstock_value_m, o.overstock_pct)], textposition="outside"))
 f.update_layout(title="Overstock value by category (share of category stock)", xaxis=dict(title="Overstock value (millions)", range=[0, 14]))
+f.update_traces(hovertemplate="%{y}<br>Overstock value: %{x:.2f}M<extra></extra>")
 figs["overstock"] = style(f, 380, margin=dict(l=200, r=40, t=50, b=50))
 
 r = risk.sort_values("pct_urgent")
 f = go.Figure(go.Bar(y=r.category, x=r.pct_urgent, orientation="h", marker_color="#b91c1c", text=[f"{v:.0f}%" for v in r.pct_urgent], textposition="outside"))
 f.update_layout(title="Store-products below safety stock with nothing on order (%)", xaxis=dict(title="% of store-products", range=[0, 80]))
+f.update_traces(hovertemplate="%{y}<br>%{x:.1f}% of store-products<extra></extra>")
 figs["risk"] = style(f, 380, margin=dict(l=200, r=40, t=50, b=50))
 
 for k, fg in figs.items():
